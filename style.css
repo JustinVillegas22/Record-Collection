@@ -35,7 +35,7 @@ main {
 
 .instruction {
   font-size: 0.95rem;
-  margin-top: 0.75rem;
+  margin: 0.5rem 1rem;
   color: #555;
 }
 

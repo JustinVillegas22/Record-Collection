@@ -1,3 +1,5 @@
+// The full corrected JS content with 'dailyDiv' variable properly set
+
 const token = "GFmoriXlCJoKjcQLGptEpXxZNEVcjhUZSKXVuyBJ";
 const username = "JustinVillegas";
 const folderId = 0;
@@ -56,8 +58,8 @@ function showRandomAlbums() {
   const selection = shuffled.slice(0, 3);
 
   selection.forEach(album => {
-    const div = document.createElement("div");
-    div.className = "album";
+    const dailyDiv = document.createElement("div");
+    dailyDiv.className = "album";
 
     const img = document.createElement("img");
     img.src = album.cover_image;
@@ -71,12 +73,12 @@ function showRandomAlbums() {
     title.className = "album-title";
     title.textContent = album.title;
 
-    div.appendChild(img);
-    div.appendChild(artist);
-    div.appendChild(title);
+    dailyDiv.appendChild(img);
+    dailyDiv.appendChild(artist);
+    dailyDiv.appendChild(title);
 
-    div.onclick = async () => {
-      if (div.querySelector(".tracklist")) return;
+    dailyDiv.onclick = async () => {
+      if (dailyDiv.querySelector(".tracklist")) return;
 
       const releaseUrl = album.resource_url + "?token=" + token;
       try {
@@ -92,33 +94,14 @@ function showRandomAlbums() {
           trackDiv.appendChild(t);
         });
 
-        div.appendChild(trackDiv);
-        div.scrollIntoView({ behavior: "smooth", block: "start" });
+        dailyDiv.appendChild(trackDiv);
+        dailyDiv.scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
         console.error("Failed to load tracklist", error);
       }
     };
 
-    randomContainer.appendChild(div);
-    const div = document.createElement("div");
-    div.className = "album";
-
-    const img = document.createElement("img");
-    img.src = album.cover_image;
-    img.alt = album.title;
-
-    const artist = document.createElement("div");
-    artist.className = "album-artist";
-    artist.textContent = album.artists[0].name;
-
-    const title = document.createElement("div");
-    title.className = "album-title";
-    title.textContent = album.title;
-
-    div.appendChild(img);
-    div.appendChild(artist);
-    div.appendChild(title);
-    randomContainer.appendChild(div);
+    randomContainer.appendChild(dailyDiv);
   });
 }
 
@@ -138,7 +121,8 @@ function renderSearchBar() {
 
 function renderArtists(filter = "") {
   const artistList = document.getElementById("artist-list");
-  artistList.innerHTML = "";
+  const dailySection = document.getElementById("daily-highlight");
+  artistList.innerHTML = '<p class="instruction">Tap an artist to see available albums.</p>';
 
   const sortedArtists = Array.from(artistMap.keys()).sort((a, b) => getSortKey(a).localeCompare(getSortKey(b)));
   const filtered = sortedArtists.filter(artist => artist.toLowerCase().includes(filter));
@@ -158,7 +142,7 @@ function renderArtists(filter = "") {
       link.textContent = artist.length > 25 ? artist.slice(0, 22) + "..." : artist;
       link.onclick = (e) => {
         e.preventDefault();
-        document.getElementById("daily-highlight").style.display = "none";
+        dailySection.style.display = "none";
         renderAlbums(artistMap.get(artist));
       };
       colDiv.appendChild(link);
