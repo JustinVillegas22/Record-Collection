@@ -16,6 +16,7 @@ async function fetchCollection(page = 1) {
     await fetchCollection(page + 1);
   } else {
     prepareArtistMap();
+    showRandomAlbums();
     renderSearchBar();
     renderArtists();
   }
@@ -42,6 +43,82 @@ function prepareArtistMap() {
       artistMap.set(displayName, []);
     }
     artistMap.get(displayName).push(release.basic_information);
+  });
+}
+
+function showRandomAlbums() {
+  const randomContainer = document.getElementById("random-albums");
+  const dailySection = document.getElementById("daily-highlight");
+  randomContainer.innerHTML = "";
+
+  const allAlbums = collection.map(r => r.basic_information);
+  const shuffled = allAlbums.sort(() => 0.5 - Math.random());
+  const selection = shuffled.slice(0, 3);
+
+  selection.forEach(album => {
+    const div = document.createElement("div");
+    div.className = "album";
+
+    const img = document.createElement("img");
+    img.src = album.cover_image;
+    img.alt = album.title;
+
+    const artist = document.createElement("div");
+    artist.className = "album-artist";
+    artist.textContent = album.artists[0].name;
+
+    const title = document.createElement("div");
+    title.className = "album-title";
+    title.textContent = album.title;
+
+    div.appendChild(img);
+    div.appendChild(artist);
+    div.appendChild(title);
+
+    div.onclick = async () => {
+      if (div.querySelector(".tracklist")) return;
+
+      const releaseUrl = album.resource_url + "?token=" + token;
+      try {
+        const res = await fetch(releaseUrl);
+        const data = await res.json();
+        const tracklist = data.tracklist;
+
+        const trackDiv = document.createElement("div");
+        trackDiv.className = "tracklist";
+        tracklist.forEach(track => {
+          const t = document.createElement("div");
+          t.textContent = `${track.position} - ${track.title} ${track.duration ? "(" + track.duration + ")" : ""}`;
+          trackDiv.appendChild(t);
+        });
+
+        div.appendChild(trackDiv);
+        div.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        console.error("Failed to load tracklist", error);
+      }
+    };
+
+    randomContainer.appendChild(div);
+    const div = document.createElement("div");
+    div.className = "album";
+
+    const img = document.createElement("img");
+    img.src = album.cover_image;
+    img.alt = album.title;
+
+    const artist = document.createElement("div");
+    artist.className = "album-artist";
+    artist.textContent = album.artists[0].name;
+
+    const title = document.createElement("div");
+    title.className = "album-title";
+    title.textContent = album.title;
+
+    div.appendChild(img);
+    div.appendChild(artist);
+    div.appendChild(title);
+    randomContainer.appendChild(div);
   });
 }
 
@@ -81,6 +158,7 @@ function renderArtists(filter = "") {
       link.textContent = artist.length > 25 ? artist.slice(0, 22) + "..." : artist;
       link.onclick = (e) => {
         e.preventDefault();
+        document.getElementById("daily-highlight").style.display = "none";
         renderAlbums(artistMap.get(artist));
       };
       colDiv.appendChild(link);
