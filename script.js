@@ -22,9 +22,7 @@ async function fetchCollection(page = 1) {
 }
 
 function normalizeArtistName(name) {
-  // Remove trailing (number) and trim
   name = name.replace(/\s*\(\d+\)$/, "").trim();
-  // Merge variants of Jason Isbell
   if (name.toLowerCase() === "jason isbell and the 400 unit") {
     return "Jason Isbell";
   }
@@ -112,6 +110,31 @@ function renderAlbums(albums) {
 
     div.appendChild(img);
     div.appendChild(title);
+
+    div.onclick = async () => {
+      if (div.querySelector(".tracklist")) return;
+
+      const releaseUrl = album.resource_url + "?token=" + token;
+      try {
+        const res = await fetch(releaseUrl);
+        const data = await res.json();
+        const tracklist = data.tracklist;
+
+        const trackDiv = document.createElement("div");
+        trackDiv.className = "tracklist";
+        tracklist.forEach(track => {
+          const t = document.createElement("div");
+          t.textContent = `${track.position} - ${track.title} ${track.duration ? "(" + track.duration + ")" : ""}`;
+          trackDiv.appendChild(t);
+        });
+
+        div.appendChild(trackDiv);
+        div.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        console.error("Failed to load tracklist", error);
+      }
+    };
+
     display.appendChild(div);
   });
 }

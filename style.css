@@ -28,7 +28,7 @@ main {
   overflow-x: auto;
   background: #eee;
   padding: 1rem;
-  gap: 6rem; /* Double padding between columns */
+  gap: 6rem;
 }
 
 .artist-column {
@@ -84,4 +84,13 @@ main {
 .album-title {
   margin-top: 0.5rem;
   font-size: 1rem;
+}
+
+.tracklist {
+  margin-top: 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  background-color: #fafafa;
+  border-left: 3px solid #0077cc;
 }
