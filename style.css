@@ -33,12 +33,6 @@ main {
   margin-bottom: 0.75rem;
 }
 
-.instruction {
-  font-size: 0.95rem;
-  margin: 1rem 1rem 0.5rem;
-  color: #555;
-}
-
 #random-albums {
   display: flex;
   flex-direction: column;
@@ -54,14 +48,16 @@ main {
 #artist-list {
   display: flex;
   flex-direction: row;
-  overflow-x: auto;
+  overflow-x: scroll;
+  overflow-y: hidden;
   background: #eee;
   padding: 1rem;
-  gap: 8rem;
+  gap: 4rem;
   position: sticky;
   top: 0;
   z-index: 100;
   flex-wrap: nowrap;
+  scrollbar-width: auto;
 }
 
 .artist-column {
@@ -87,21 +83,17 @@ main {
   text-decoration: underline;
 }
 
-.search-bar {
-  min-width: 200px;
-  max-width: 300px;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 2px solid #0077cc;
-  border-radius: 5px;
-  margin: 1rem;
-}
-
 #album-display {
   display: flex;
   flex-direction: column;
   padding: 1rem;
   gap: 1.5rem;
+}
+
+.album {
+  background: #fff;
+  padding: 0.5rem;
+  border-radius: 8px;
 }
 
 .album img {
@@ -126,6 +118,6 @@ main {
   text-align: left;
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
-  background-color: #fafafa;
+  background-color: #fff;
   border-left: 3px solid #0077cc;
 }

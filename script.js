@@ -31,17 +31,20 @@ async function fetchCollection() {
   displayRandomAlbums();
 }
 
+function cleanArtistName(name) {
+  name = name.replace(/\s*\(\d+\)$/, ""); // remove (1), (2)
+  if (name.toLowerCase().startsWith("the ")) {
+    name = name.slice(4);
+  }
+  if (name === "Jason Isbell and The 400 Unit") name = "Jason Isbell";
+  return name;
+}
+
 function displayArtists() {
   const names = {};
   releases.forEach(release => {
     release.artists.forEach(artist => {
-      let name = artist.name;
-      name = name.replace(/\s*\(\d+\)$/, ""); // remove (1), (2) etc
-      if (name.toLowerCase().startsWith("the ")) {
-        name = name.slice(4);
-      }
-      if (name === "Jason Isbell and The 400 Unit") name = "Jason Isbell";
-      if (name === "Jason Isbell") name = "Jason Isbell"; // ensure consistency
+      const name = cleanArtistName(artist.name);
       if (!names[name]) names[name] = [];
       names[name].push(release);
     });
@@ -97,7 +100,7 @@ function createAlbumElement(album, fromDaily = false) {
 
   const artist = document.createElement("div");
   artist.className = "album-artist";
-  artist.textContent = album.artists[0].name;
+  artist.textContent = cleanArtistName(album.artists[0].name);
 
   const title = document.createElement("div");
   title.className = "album-title";
@@ -108,7 +111,11 @@ function createAlbumElement(album, fromDaily = false) {
   div.appendChild(title);
 
   div.onclick = async () => {
-    if (div.querySelector(".tracklist")) return;
+    const existing = div.querySelector(".tracklist");
+    if (existing) {
+      existing.remove();
+      return;
+    }
 
     const releaseUrl = album.resource_url + "?token=" + token;
     try {
