@@ -142,3 +142,28 @@ function createAlbumElement(album, fromDaily = false) {
 }
 
 fetchCollection();
+
+window.addEventListener('load', () => {
+  const artistList = document.getElementById('artist-list');
+  const albumList = document.getElementById('album-list');
+
+  if (artistList.scrollWidth > artistList.clientWidth) {
+    artistList.scrollTo({ left: 30, behavior: 'smooth' });
+    setTimeout(() => artistList.scrollTo({ left: 0, behavior: 'smooth' }), 500);
+  }
+
+  setTimeout(() => {
+    if (albumList.scrollHeight > albumList.clientHeight) {
+      albumList.scrollTo({ top: 30, behavior: 'smooth' });
+      setTimeout(() => albumList.scrollTo({ top: 0, behavior: 'smooth' }), 500);
+    }
+  }, 1000);
+});
+
+function bounceAlbumScrollIfNeeded() {
+  const albumList = document.getElementById('album-list');
+  if (albumList.scrollHeight > albumList.clientHeight + 50) {
+    albumList.scrollTo({ top: 30, behavior: 'smooth' });
+    setTimeout(() => albumList.scrollTo({ top: 0, behavior: 'smooth' }), 400);
+  }
+}
