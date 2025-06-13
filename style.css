@@ -58,7 +58,7 @@ main {
   overflow-y: hidden;
   background: #eee;
   padding: 1rem;
-  gap: 4rem;
+  gap: 2rem;
   position: sticky;
   top: 0;
   z-index: 100;
