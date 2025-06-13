@@ -12,7 +12,7 @@ body {
 
 header {
   padding: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.75rem;
   background: #333;
   color: white;
   text-align: center;
@@ -47,6 +47,8 @@ main {
 }
 
 #artist-list {
+  scroll-padding-left: 1rem;
+  padding-left: 1rem;
   -webkit-overflow-scrolling: auto;
   scrollbar-color: #aaa #eee;
   scrollbar-width: auto;
@@ -65,6 +67,8 @@ main {
 }
 
 .artist-column {
+  scroll-snap-align: start;
+  margin-right: 0.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -75,7 +79,7 @@ main {
 .artist-column a {
   text-decoration: none;
   color: #0077cc;
-  font-size: 1rem;
+  font-size: 0.75rem;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -107,7 +111,7 @@ main {
 
 .album-title {
   margin-top: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.75rem;
 }
 
 .album-artist {
@@ -124,4 +128,16 @@ main {
   padding: 0.5rem 1rem;
   background-color: #fff;
   border-left: 3px solid #0077cc;
+}
+
+#artist-list {
+  scroll-padding-left: 1rem;
+  padding-left: 1rem;
+  scroll-snap-type: x mandatory;
+}
+
+.artist-column {
+  scroll-snap-align: start;
+  margin-right: 0.25rem;
+  scroll-snap-align: start;
 }
