@@ -173,3 +173,94 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollBounceY(albumList);
   }, 600);
 });
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const artistList = document.getElementById("artist-list");
+    if (artistList) {
+      artistList.scrollBy({ left: 200, behavior: "smooth" });
+    }
+  }, 1000);
+});
+
+function autoScrollArtistListOnceReady(attempts = 0) {
+  const artistList = document.getElementById("artist-list");
+  if (!artistList || attempts > 10) return;
+
+  if (artistList.scrollWidth > artistList.clientWidth + 10) {
+    artistList.scrollBy({ left: 200, behavior: "smooth" });
+  } else {
+    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
+  }
+}
+
+window.addEventListener("load", () => {
+  setTimeout(() => autoScrollArtistListOnceReady(), 800);
+});
+
+
+function autoScrollArtistListOnceReady(attempts = 0) {
+  const artistList = document.getElementById("artist-list");
+  if (!artistList || attempts > 10) return;
+
+  if (artistList.scrollWidth > artistList.clientWidth + 10) {
+    artistList.scrollBy({ left: 100, behavior: "smooth" });
+  } else {
+    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
+  }
+}
+
+window.addEventListener("load", () => {
+  setTimeout(() => autoScrollArtistListOnceReady(), 1800);
+});
+
+
+function autoScrollArtistListOnceReady(attempts = 0) {
+  const artistList = document.getElementById("artist-list");
+  if (!artistList || attempts > 10) return;
+
+  if (artistList.scrollWidth > artistList.clientWidth + 10) {
+    // Temporarily disable scroll snap
+    artistList.style.scrollSnapType = "none";
+    artistList.scrollBy({ left: 100, behavior: "smooth" });
+
+    // Re-enable scroll snap after delay
+    setTimeout(() => {
+      artistList.style.scrollSnapType = "";
+    }, 800);
+  } else {
+    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
+  }
+}
+
+window.addEventListener("load", () => {
+  setTimeout(() => autoScrollArtistListOnceReady(), 1800);
+});
+
+
+function autoScrollArtistListOnceReady(attempts = 0) {
+  const artistList = document.getElementById("artist-list");
+  if (!artistList || attempts > 10) return;
+
+  if (artistList.scrollWidth > artistList.clientWidth + 10) {
+    // Temporarily disable scroll snap
+    artistList.style.scrollSnapType = "none";
+
+    // Smooth initial scroll
+    artistList.scrollBy({ left: 50, behavior: "smooth" });
+
+    // Wait for user to scroll before re-enabling snapping
+    const enableSnapOnUserScroll = () => {
+      artistList.style.scrollSnapType = "";
+      artistList.removeEventListener("scroll", enableSnapOnUserScroll);
+    };
+
+    artistList.addEventListener("scroll", enableSnapOnUserScroll);
+  } else {
+    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
+  }
+}
+
+window.addEventListener("load", () => {
+  setTimeout(() => autoScrollArtistListOnceReady(), 1800);
+});
