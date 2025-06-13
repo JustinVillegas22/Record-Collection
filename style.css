@@ -1,11 +1,175 @@
-
-/* Optional bounce animation hint */
-.scroll-hint {
-  animation: pulse-shadow 1.2s ease-in-out;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
 
-@keyframes pulse-shadow {
-  0% { box-shadow: 0 0 0px rgba(0,0,0,0); }
-  50% { box-shadow: 0 0 10px rgba(0,0,0,0.3); }
-  100% { box-shadow: 0 0 0px rgba(0,0,0,0); }
+body {
+  background: #f5f5f5;
+  color: #333;
+}
+
+header {
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  background: #333;
+  color: white;
+  text-align: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+#daily-highlight {
+  padding: 1rem;
+  background-color: #fff8dc;
+  text-align: center;
+}
+
+#daily-highlight h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+#random-albums {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+#random-albums .album {
+  width: 100%;
+  text-align: center;
+}
+
+#artist-list {
+  scroll-padding-left: 1rem;
+  padding-left: 1rem;
+  -webkit-overflow-scrolling: auto;
+  scrollbar-color: #aaa #eee;
+  scrollbar-width: auto;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  background: #eee;
+  padding: 1rem;
+  gap: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: nowrap;
+  scrollbar-width: auto;
+}
+
+.artist-column {
+  width: 10rem;
+  scroll-snap-align: start;
+  scroll-snap-align: start;
+  margin-right: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 0 0 auto;
+  width: 10rem;
+}
+
+.artist-column a {
+  text-decoration: none;
+  color: #0077cc;
+  font-size: 0.75rem;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.artist-column a:hover {
+  text-decoration: underline;
+}
+
+#album-display {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1.5rem;
+}
+
+.album {
+  background: #fff;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.album img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.album-title {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.album-artist {
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #222;
+  margin-top: 0.25rem;
+}
+
+.tracklist {
+  margin-top: 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  border-left: 3px solid #0077cc;
+}
+
+#artist-list {
+  scroll-padding-left: 1rem;
+  padding-left: 1rem;
+  scroll-snap-type: x mandatory;
+}
+
+.artist-column {
+  width: 10rem;
+  scroll-snap-align: start;
+  scroll-snap-align: start;
+  margin-right: 0.25rem;
+  scroll-snap-align: start;
+}
+
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.25rem;
+  }
+}
+
+
+/* Force large font for artist names with strong specificity */
+#artist-list .artist-column a {
+  font-size: 2rem !important;
+  line-height: 2.4rem !important;
+}
+
+
+/* Adjusted font size for artist names */
+#artist-list .artist-column a {
+  font-size: 1.5rem !important;
+  line-height: 1.9rem !important;
+}
+
+
+/* Final refined font size for artist names */
+#artist-list .artist-column a {
+  font-size: 1.25rem !important;
+  line-height: 1.6rem !important;
 }
