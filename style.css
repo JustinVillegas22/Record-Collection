@@ -11,7 +11,8 @@ body {
 }
 
 header {
-  padding: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
   background: #333;
   color: white;
   text-align: center;
@@ -46,6 +47,9 @@ main {
 }
 
 #artist-list {
+  -webkit-overflow-scrolling: auto;
+  scrollbar-color: #aaa #eee;
+  scrollbar-width: auto;
   display: flex;
   flex-direction: row;
   overflow-x: scroll;

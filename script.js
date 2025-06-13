@@ -36,7 +36,7 @@ function cleanArtistName(name) {
   if (name.toLowerCase().startsWith("the ")) {
     name = name.slice(4);
   }
-  if (name === "Jason Isbell and The 400 Unit") name = "Jason Isbell";
+  if (name.includes("Jason Isbell")) name = "Jason Isbell";
   return name;
 }
 
