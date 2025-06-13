@@ -152,3 +152,24 @@ main {
     font-size: 1.25rem;
   }
 }
+
+
+/* Force large font for artist names with strong specificity */
+#artist-list .artist-column a {
+  font-size: 2rem !important;
+  line-height: 2.4rem !important;
+}
+
+
+/* Adjusted font size for artist names */
+#artist-list .artist-column a {
+  font-size: 1.5rem !important;
+  line-height: 1.9rem !important;
+}
+
+
+/* Final refined font size for artist names */
+#artist-list .artist-column a {
+  font-size: 1.25rem !important;
+  line-height: 1.6rem !important;
+}
