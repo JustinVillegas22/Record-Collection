@@ -173,3 +173,14 @@ main {
   font-size: 1.25rem !important;
   line-height: 1.6rem !important;
 }
+
+/* Optional bounce animation hint */
+.scroll-hint {
+  animation: pulse-shadow 1.2s ease-in-out;
+}
+
+@keyframes pulse-shadow {
+  0% { box-shadow: 0 0 0px rgba(0,0,0,0); }
+  50% { box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+  100% { box-shadow: 0 0 0px rgba(0,0,0,0); }
+}

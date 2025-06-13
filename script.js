@@ -1,8 +1,9 @@
+
 const username = "JustinVillegas";
 const token = "GFmoriXlCJoKjcQLGptEpXxZNEVcjhUZSKXVuyBJ";
 
 const artistList = document.getElementById("artist-list");
-const albumDisplay = document.getElementById("album-display");
+const albumList = document.getElementById("album-list");
 const randomContainer = document.getElementById("random-albums");
 
 let releases = [];
@@ -32,10 +33,8 @@ async function fetchCollection() {
 }
 
 function cleanArtistName(name) {
-  name = name.replace(/\s*\(\d+\)$/, ""); // remove (1), (2)
-  if (name.toLowerCase().startsWith("the ")) {
-    name = name.slice(4);
-  }
+  name = name.replace(/\s*\(\d+\)$/, "");
+  if (name.toLowerCase().startsWith("the ")) name = name.slice(4);
   if (name.includes("Jason Isbell")) name = "Jason Isbell";
   return name;
 }
@@ -70,11 +69,12 @@ function displayArtists() {
       a.href = "#";
       a.onclick = () => {
         document.getElementById("daily-highlight").style.display = "none";
-        albumDisplay.innerHTML = "";
+        albumList.innerHTML = "";
         albums.sort((a, b) => a.title.localeCompare(b.title)).forEach(album => {
           const div = createAlbumElement(album);
-          albumDisplay.appendChild(div);
+          albumList.appendChild(div);
         });
+        setTimeout(bounceAlbumScrollIfNeeded, 500);
       };
       colDiv.appendChild(a);
     });
@@ -141,29 +141,35 @@ function createAlbumElement(album, fromDaily = false) {
   return div;
 }
 
-fetchCollection();
-
-window.addEventListener('load', () => {
-  const artistList = document.getElementById('artist-list');
-  const albumList = document.getElementById('album-list');
-
-  if (artistList.scrollWidth > artistList.clientWidth) {
-    artistList.scrollTo({ left: 30, behavior: 'smooth' });
-    setTimeout(() => artistList.scrollTo({ left: 0, behavior: 'smooth' }), 500);
-  }
-
-  setTimeout(() => {
-    if (albumList.scrollHeight > albumList.clientHeight) {
-      albumList.scrollTo({ top: 30, behavior: 'smooth' });
-      setTimeout(() => albumList.scrollTo({ top: 0, behavior: 'smooth' }), 500);
+// Bounce hinting
+function scrollBounceX(element) {
+  if (!element) return;
+  requestAnimationFrame(() => {
+    if (element.scrollWidth > element.clientWidth) {
+      element.scrollTo({ left: 100, behavior: 'smooth' });
+      setTimeout(() => element.scrollTo({ left: 0, behavior: 'smooth' }), 600);
     }
-  }, 1000);
-});
+  });
+}
+
+function scrollBounceY(element) {
+  if (!element) return;
+  requestAnimationFrame(() => {
+    if (element.scrollHeight > element.clientHeight + 50) {
+      element.scrollTo({ top: 100, behavior: 'smooth' });
+      setTimeout(() => element.scrollTo({ top: 0, behavior: 'smooth' }), 600);
+    }
+  });
+}
 
 function bounceAlbumScrollIfNeeded() {
-  const albumList = document.getElementById('album-list');
-  if (albumList.scrollHeight > albumList.clientHeight + 50) {
-    albumList.scrollTo({ top: 30, behavior: 'smooth' });
-    setTimeout(() => albumList.scrollTo({ top: 0, behavior: 'smooth' }), 400);
-  }
+  scrollBounceY(albumList);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchCollection();
+  setTimeout(() => {
+    scrollBounceX(artistList);
+    scrollBounceY(albumList);
+  }, 600);
+});
