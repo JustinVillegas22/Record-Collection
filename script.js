@@ -1,4 +1,3 @@
-
 const username = "JustinVillegas";
 const token = "GFmoriXlCJoKjcQLGptEpXxZNEVcjhUZSKXVuyBJ";
 
@@ -142,22 +141,50 @@ function displayRandomAlbums() {
   const shuffled = [...releases].sort(() => 0.5 - Math.random());
   const selected = shuffled.slice(0, 3);
   randomContainer.innerHTML = "";
+
   selected.forEach(album => {
     const albumDiv = document.createElement("div");
     albumDiv.className = "album";
+
     const img = document.createElement("img");
     img.src = album.cover_image;
-    const name = document.createElement("p");
+
+    const title = document.createElement("p");
     const artist = album.artists?.[0]?.name || "Unknown";
-    name.textContent = `${cleanArtistName(artist)} – ${album.title}`;
+    title.textContent = `${cleanArtistName(artist)} – ${album.title}`;
+
+    const tracklist = document.createElement("ul");
+    tracklist.style.display = "none";
+
     albumDiv.appendChild(img);
-    albumDiv.appendChild(name);
-    albumDiv.addEventListener("click", () => {
-      showAlbums(cleanArtistName(artist), artistMap[cleanArtistName(artist)]);
+    albumDiv.appendChild(title);
+    albumDiv.appendChild(tracklist);
+
+    albumDiv.addEventListener("click", async () => {
+      if (tracklist.style.display === "none") {
+        const idToUse = album.master_id || album.id;
+        const res = await fetch(`https://api.discogs.com/masters/${idToUse}`);
+        const data = await res.json();
+
+        if (Array.isArray(data.tracklist) && data.tracklist.length > 0) {
+          tracklist.innerHTML = "";
+          data.tracklist.forEach(track => {
+            const li = document.createElement("li");
+            li.textContent = track.title;
+            tracklist.appendChild(li);
+          });
+          tracklist.style.display = "block";
+        }
+      } else {
+        tracklist.style.display = "none";
+      }
     });
+
     randomContainer.appendChild(albumDiv);
   });
 }
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("search-bar").addEventListener("input", function (e) {
