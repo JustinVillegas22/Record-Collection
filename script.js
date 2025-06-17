@@ -40,13 +40,23 @@ function cleanArtistName(name) {
   return name.trim();
 }
 
+
 function buildArtistMap() {
+  const COMBINE = {
+    "jason isbell and the 400 unit": "Jason Isbell"
+  };
+  const IGNORE = ["night tripper", "orchestra"];
+
   artistMap = {};
   releases.forEach(release => {
     release.artists.forEach(artist => {
-      const name = cleanArtistName(artist.name);
+      let name = cleanArtistName(artist.name);
+      const merged = COMBINE[name.toLowerCase()];
+      if (merged) name = merged;
+      if (IGNORE.includes(name.toLowerCase())) return;
       if (!artistMap[name]) artistMap[name] = [];
       artistMap[name].push(release);
+      artistMap[name].sort((a, b) => a.title.localeCompare(b.title));
     });
   });
 }
