@@ -184,3 +184,12 @@ main {
   50% { box-shadow: 0 0 10px rgba(0,0,0,0.3); }
   100% { box-shadow: 0 0 0px rgba(0,0,0,0); }
 }
+
+
+#search-bar {
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  margin: 1rem;
+  width: calc(100% - 2rem);
+  box-sizing: border-box;
+}

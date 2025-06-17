@@ -7,6 +7,7 @@ const albumList = document.getElementById("album-list");
 const randomContainer = document.getElementById("random-albums");
 
 let releases = [];
+let artistMap = {};
 
 async function fetchCollection() {
   let page = 1;
@@ -28,6 +29,7 @@ async function fetchCollection() {
     id: r.id
   }));
 
+  buildArtistMap();
   displayArtists();
   displayRandomAlbums();
 }
@@ -35,29 +37,43 @@ async function fetchCollection() {
 function cleanArtistName(name) {
   name = name.replace(/\s*\(\d+\)$/, "");
   if (name.toLowerCase().startsWith("the ")) name = name.slice(4);
-  if (name.includes("Jason Isbell")) name = "Jason Isbell";
-  return name;
+  return name.trim();
 }
 
-function displayArtists() {
-  const names = {};
+
+function buildArtistMap() {
+  const COMBINE = {
+    "jason isbell and the 400 unit": "Jason Isbell"
+  };
+  const IGNORE = ["night tripper", "orchestra"];
+
+  artistMap = {};
   releases.forEach(release => {
     release.artists.forEach(artist => {
-      const name = cleanArtistName(artist.name);
-      if (!names[name]) names[name] = [];
-      names[name].push(release);
+      let name = cleanArtistName(artist.name);
+      const merged = COMBINE[name.toLowerCase()];
+      if (merged) name = merged;
+      if (IGNORE.includes(name.toLowerCase())) return;
+      if (!artistMap[name]) artistMap[name] = [];
+      artistMap[name].push(release);
     });
   });
+}
 
-  const sorted = Object.keys(names).sort((a, b) => a.localeCompare(b));
-  const columns = [];
+function displayArtists(filter = "") {
+  artistList.innerHTML = "";
+  const filtered = Object.keys(artistMap)
+    .filter(name => name.toLowerCase().includes(filter.toLowerCase()))
+    .sort((a, b) => a.localeCompare(b));
+
   const colSize = 4;
+  const columns = [];
 
-  for (let i = 0; i < sorted.length; i++) {
-    const name = sorted[i];
+  for (let i = 0; i < filtered.length; i++) {
+    const name = filtered[i];
     const columnIndex = Math.floor(i / colSize);
     if (!columns[columnIndex]) columns[columnIndex] = [];
-    columns[columnIndex].push({ name, albums: names[name] });
+    columns[columnIndex].push({ name, albums: artistMap[name] });
   }
 
   columns.forEach(col => {
@@ -69,12 +85,7 @@ function displayArtists() {
       a.href = "#";
       a.onclick = () => {
         document.getElementById("daily-highlight").style.display = "none";
-        albumList.innerHTML = "";
-        albums.sort((a, b) => a.title.localeCompare(b.title)).forEach(album => {
-          const div = createAlbumElement(album);
-          albumList.appendChild(div);
-        });
-        setTimeout(bounceAlbumScrollIfNeeded, 500);
+        showAlbums(name, albums);
       };
       colDiv.appendChild(a);
     });
@@ -82,185 +93,69 @@ function displayArtists() {
   });
 }
 
+function showAlbums(artistName, albums) {
+  albumList.innerHTML = "";
+  const banner = document.createElement("h2");
+  banner.textContent = artistName;
+  albumList.appendChild(banner);
+
+  albums.forEach(album => {
+    const albumDiv = document.createElement("div");
+    albumDiv.className = "album";
+    const img = document.createElement("img");
+    img.src = album.cover_image;
+    const title = document.createElement("p");
+    title.textContent = album.title;
+    albumDiv.appendChild(img);
+    albumDiv.appendChild(title);
+
+    const tracklist = document.createElement("ul");
+    tracklist.style.display = "none";
+    albumDiv.appendChild(tracklist);
+
+    albumDiv.addEventListener("click", async () => {
+      if (tracklist.style.display === "none") {
+        const res = await fetch(`https://api.discogs.com/masters/${album.id}`);
+        const data = await res.json();
+        tracklist.innerHTML = "";
+        data.tracklist.forEach(track => {
+          const li = document.createElement("li");
+          li.textContent = track.title;
+          tracklist.appendChild(li);
+        });
+        tracklist.style.display = "block";
+      } else {
+        tracklist.style.display = "none";
+      }
+    });
+
+    albumList.appendChild(albumDiv);
+  });
+}
+
 function displayRandomAlbums() {
-  const shuffled = releases.sort(() => 0.5 - Math.random()).slice(0, 3);
-  shuffled.forEach(album => {
-    const div = createAlbumElement(album, true);
-    randomContainer.appendChild(div);
+  const shuffled = [...releases].sort(() => 0.5 - Math.random());
+  const selected = shuffled.slice(0, 3);
+  randomContainer.innerHTML = "";
+  selected.forEach(album => {
+    const albumDiv = document.createElement("div");
+    albumDiv.className = "album";
+    const img = document.createElement("img");
+    img.src = album.cover_image;
+    const name = document.createElement("p");
+    const artist = album.artists?.[0]?.name || "Unknown";
+    name.textContent = `${cleanArtistName(artist)} – ${album.title}`;
+    albumDiv.appendChild(img);
+    albumDiv.appendChild(name);
+    albumDiv.addEventListener("click", () => {
+      showAlbums(cleanArtistName(artist), artistMap[cleanArtistName(artist)]);
+    });
+    randomContainer.appendChild(albumDiv);
   });
 }
 
-function createAlbumElement(album, fromDaily = false) {
-  const div = document.createElement("div");
-  div.className = "album";
-
-  const img = document.createElement("img");
-  img.src = album.cover_image;
-  img.alt = album.title;
-
-  const artist = document.createElement("div");
-  artist.className = "album-artist";
-  artist.textContent = cleanArtistName(album.artists[0].name);
-
-  const title = document.createElement("div");
-  title.className = "album-title";
-  title.textContent = album.title;
-
-  div.appendChild(img);
-  div.appendChild(artist);
-  div.appendChild(title);
-
-  div.onclick = async () => {
-    const existing = div.querySelector(".tracklist");
-    if (existing) {
-      existing.remove();
-      return;
-    }
-
-    const releaseUrl = album.resource_url + "?token=" + token;
-    try {
-      const res = await fetch(releaseUrl);
-      const data = await res.json();
-      const tracklist = data.tracklist;
-
-      const trackDiv = document.createElement("div");
-      trackDiv.className = "tracklist";
-      tracklist.forEach(track => {
-        const t = document.createElement("div");
-        t.textContent = `${track.position} - ${track.title} ${track.duration ? "(" + track.duration + ")" : ""}`;
-        trackDiv.appendChild(t);
-      });
-
-      div.appendChild(trackDiv);
-      div.scrollIntoView({ behavior: "smooth", block: "start" });
-    } catch (error) {
-      console.error("Failed to load tracklist", error);
-    }
-  };
-
-  return div;
-}
-
-// Bounce hinting
-function scrollBounceX(element) {
-  if (!element) return;
-  requestAnimationFrame(() => {
-    if (element.scrollWidth > element.clientWidth) {
-      element.scrollTo({ left: 100, behavior: 'smooth' });
-      setTimeout(() => element.scrollTo({ left: 0, behavior: 'smooth' }), 600);
-    }
-  });
-}
-
-function scrollBounceY(element) {
-  if (!element) return;
-  requestAnimationFrame(() => {
-    if (element.scrollHeight > element.clientHeight + 50) {
-      element.scrollTo({ top: 100, behavior: 'smooth' });
-      setTimeout(() => element.scrollTo({ top: 0, behavior: 'smooth' }), 600);
-    }
-  });
-}
-
-function bounceAlbumScrollIfNeeded() {
-  scrollBounceY(albumList);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  fetchCollection();
-  setTimeout(() => {
-    scrollBounceX(artistList);
-    scrollBounceY(albumList);
-  }, 600);
+document.getElementById("search-bar").addEventListener("input", function (e) {
+  displayArtists(e.target.value);
 });
 
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    const artistList = document.getElementById("artist-list");
-    if (artistList) {
-      artistList.scrollBy({ left: 200, behavior: "smooth" });
-    }
-  }, 1000);
-});
-
-function autoScrollArtistListOnceReady(attempts = 0) {
-  const artistList = document.getElementById("artist-list");
-  if (!artistList || attempts > 10) return;
-
-  if (artistList.scrollWidth > artistList.clientWidth + 10) {
-    artistList.scrollBy({ left: 200, behavior: "smooth" });
-  } else {
-    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
-  }
-}
-
-window.addEventListener("load", () => {
-  setTimeout(() => autoScrollArtistListOnceReady(), 800);
-});
-
-
-function autoScrollArtistListOnceReady(attempts = 0) {
-  const artistList = document.getElementById("artist-list");
-  if (!artistList || attempts > 10) return;
-
-  if (artistList.scrollWidth > artistList.clientWidth + 10) {
-    artistList.scrollBy({ left: 100, behavior: "smooth" });
-  } else {
-    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
-  }
-}
-
-window.addEventListener("load", () => {
-  setTimeout(() => autoScrollArtistListOnceReady(), 1800);
-});
-
-
-function autoScrollArtistListOnceReady(attempts = 0) {
-  const artistList = document.getElementById("artist-list");
-  if (!artistList || attempts > 10) return;
-
-  if (artistList.scrollWidth > artistList.clientWidth + 10) {
-    // Temporarily disable scroll snap
-    artistList.style.scrollSnapType = "none";
-    artistList.scrollBy({ left: 100, behavior: "smooth" });
-
-    // Re-enable scroll snap after delay
-    setTimeout(() => {
-      artistList.style.scrollSnapType = "";
-    }, 800);
-  } else {
-    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
-  }
-}
-
-window.addEventListener("load", () => {
-  setTimeout(() => autoScrollArtistListOnceReady(), 1800);
-});
-
-
-function autoScrollArtistListOnceReady(attempts = 0) {
-  const artistList = document.getElementById("artist-list");
-  if (!artistList || attempts > 10) return;
-
-  if (artistList.scrollWidth > artistList.clientWidth + 10) {
-    // Temporarily disable scroll snap
-    artistList.style.scrollSnapType = "none";
-
-    // Smooth initial scroll
-    artistList.scrollBy({ left: 50, behavior: "smooth" });
-
-    // Wait for user to scroll before re-enabling snapping
-    const enableSnapOnUserScroll = () => {
-      artistList.style.scrollSnapType = "";
-      artistList.removeEventListener("scroll", enableSnapOnUserScroll);
-    };
-
-    artistList.addEventListener("scroll", enableSnapOnUserScroll);
-  } else {
-    setTimeout(() => autoScrollArtistListOnceReady(attempts + 1), 300);
-  }
-}
-
-window.addEventListener("load", () => {
-  setTimeout(() => autoScrollArtistListOnceReady(), 1800);
-});
+fetchCollection();
