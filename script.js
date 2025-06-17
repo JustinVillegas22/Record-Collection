@@ -116,15 +116,19 @@ function showAlbums(artistName, albums) {
 
     albumDiv.addEventListener("click", async () => {
       if (tracklist.style.display === "none") {
-        const res = await fetch(`https://api.discogs.com/masters/${album.id}`);
+        const idToUse = album.master_id || album.id;
+        const res = await fetch(`https://api.discogs.com/masters/${idToUse}`);
         const data = await res.json();
-        tracklist.innerHTML = "";
-        data.tracklist.forEach(track => {
-          const li = document.createElement("li");
-          li.textContent = track.title;
-          tracklist.appendChild(li);
-        });
-        tracklist.style.display = "block";
+
+        if (Array.isArray(data.tracklist) && data.tracklist.length > 0) {
+          tracklist.innerHTML = "";
+          data.tracklist.forEach(track => {
+            const li = document.createElement("li");
+            li.textContent = track.title;
+            tracklist.appendChild(li);
+          });
+          tracklist.style.display = "block";
+        }
       } else {
         tracklist.style.display = "none";
       }
