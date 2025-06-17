@@ -47,6 +47,8 @@ main {
 }
 
 #artist-list {
+  padding-right: 1rem;
+  scroll-padding-left: 1rem;
   scroll-padding-left: 1rem;
   padding-left: 1rem;
   -webkit-overflow-scrolling: auto;
@@ -133,6 +135,8 @@ main {
 }
 
 #artist-list {
+  padding-right: 1rem;
+  scroll-padding-left: 1rem;
   scroll-padding-left: 1rem;
   padding-left: 1rem;
   scroll-snap-type: x mandatory;

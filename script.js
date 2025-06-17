@@ -40,20 +40,11 @@ function cleanArtistName(name) {
   return name.trim();
 }
 
-
 function buildArtistMap() {
-  const COMBINE = {
-    "jason isbell and the 400 unit": "Jason Isbell"
-  };
-  const IGNORE = ["night tripper", "orchestra"];
-
   artistMap = {};
   releases.forEach(release => {
     release.artists.forEach(artist => {
-      let name = cleanArtistName(artist.name);
-      const merged = COMBINE[name.toLowerCase()];
-      if (merged) name = merged;
-      if (IGNORE.includes(name.toLowerCase())) return;
+      const name = cleanArtistName(artist.name);
       if (!artistMap[name]) artistMap[name] = [];
       artistMap[name].push(release);
     });
@@ -154,8 +145,9 @@ function displayRandomAlbums() {
   });
 }
 
-document.getElementById("search-bar").addEventListener("input", function (e) {
-  displayArtists(e.target.value);
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("search-bar").addEventListener("input", function (e) {
+    displayArtists(e.target.value);
+  });
+  fetchCollection();
 });
-
-fetchCollection();
