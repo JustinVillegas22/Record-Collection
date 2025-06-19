@@ -195,6 +195,9 @@ function displayRandomAlbums() {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+  const title = document.querySelector("h1");
+  if (title) title.style.cursor = "pointer";
+  title?.addEventListener("click", () => location.reload());
   document.getElementById("search-bar").addEventListener("input", function (e) {
     displayArtists(e.target.value);
   });

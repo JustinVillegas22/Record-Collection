@@ -23,9 +23,7 @@ main {
   flex-direction: column;
 }
 
-#daily-highlight {
-  background-color: #111 !important;
-}
+
 
 #daily-highlight h2 {
   font-size: 1.2rem;
@@ -59,7 +57,7 @@ main {
   overflow-y: hidden;
   background: #eee;
   padding: 1rem;
-  gap: 2rem;
+  
   position: sticky;
   top: 0;
   z-index: 100;
@@ -315,4 +313,64 @@ h1, h2 {
 
 #daily-highlight h2 {
   text-align: center;
+}
+
+#artist-list {
+  
+}
+
+#artist-list .artist-column a {
+  font-size: 1rem !important;
+}
+
+
+#artist-list {
+  
+  display: flex !important; /* reinforce structure */
+}
+
+#artist-list .artist-column a {
+  font-size: 1.15rem !important;
+}
+
+
+#artist-list {
+  gap: 1rem !important;
+}
+
+#artist-list .artist-column a {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  line-height: 1.2 !important;
+}
+
+
+#daily-highlight h2 {
+  padding-top: 1rem;
+}
+
+
+#daily-highlight h2 {
+  padding-bottom: 0.5rem;
+}
+
+
+
+
+.album {
+  background-color: #1a1a1a !important;
+}
+
+
+#album-list,
+
+
+
+#daily-highlight {
+  background-color: #1a1a1a !important;
+}
+
+
+#random-albums {
+  background-color: #1a1a1a !important;
 }
