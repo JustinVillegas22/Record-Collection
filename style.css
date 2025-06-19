@@ -374,3 +374,23 @@ h1, h2 {
 #random-albums {
   background-color: #1a1a1a !important;
 }
+
+
+#daily-highlight h2 {
+  margin-bottom: 0.5rem !important;
+}
+
+
+#random-albums .album:first-child {
+  margin-top: 0.5rem !important;
+}
+
+
+#random-albums {
+  gap: 0.5rem !important;
+}
+
+
+#album-list h2 {
+  padding-top: 1rem;
+}
