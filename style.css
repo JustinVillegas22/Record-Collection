@@ -24,9 +24,7 @@ main {
 }
 
 #daily-highlight {
-  padding: 1rem;
-  background-color: #fff8dc;
-  text-align: center;
+  background-color: #111 !important;
 }
 
 #daily-highlight h2 {
@@ -35,6 +33,7 @@ main {
 }
 
 #random-albums {
+  background-color: #111 !important;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -196,4 +195,124 @@ main {
   margin: 1rem;
   width: calc(100% - 2rem);
   box-sizing: border-box;
+}
+
+
+
+.album p {
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+}
+
+.album ul {
+  list-style: none;
+  padding-left: 0.5rem;
+  text-align: left;
+  margin: 0.5rem 0 1rem 0;
+}
+
+
+/* Modern Dark Theme */
+
+body {
+  background-color: #111;
+  color: #eee;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header, main {
+  background-color: #111;
+  color: #eee;
+}
+
+h1, h2 {
+  color: #fff;
+}
+
+#artist-list {
+  background-color: #111;
+  scrollbar-color: #444 #222;
+}
+
+#artist-list .artist-column a {
+  color: #ccc;
+  font-weight: 500;
+  font-size: 1.25rem;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  display: block;
+  border-radius: 0.25rem;
+  transition: background 0.2s;
+}
+
+#artist-list .artist-column a:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+.album {
+  background-color: #1a1a1a;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  padding: 1rem;
+  margin: 1rem 0;
+  transition: transform 0.2s ease;
+}
+
+.album:hover {
+  transform: scale(1.02);
+}
+
+.album img {
+  border-radius: 0.25rem;
+  max-width: 100%;
+}
+
+.album p {
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+  color: #fff;
+}
+
+.album ul {
+  list-style: none;
+  padding-left: 0.5rem;
+  text-align: left;
+  margin: 0.5rem 0 1rem 0;
+  color: #ccc;
+}
+
+.album ul li {
+  padding: 0.15rem 0;
+  font-size: 0.95rem;
+}
+
+#random-albums {
+  background-color: #111 !important;
+  background-color: #111;
+  padding: 1rem 0;
+}
+
+#search-bar {
+  background-color: #222;
+  color: #eee;
+  border: 1px solid #444;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: calc(100% - 2rem);
+  margin: 1rem;
+}
+
+
+#daily-title {
+  text-align: center;
+}
+
+#daily-highlight h2 {
+  text-align: center;
 }

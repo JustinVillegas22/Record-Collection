@@ -96,7 +96,7 @@ function displayArtists(filter = "") {
 function showAlbums(artistName, albums) {
   albumList.innerHTML = "";
   const banner = document.createElement("h2");
-  banner.textContent = artistName;
+  banner.innerHTML = `<strong>${artistName}</strong>`;
   albumList.appendChild(banner);
 
   albums.forEach(album => {
@@ -105,28 +105,32 @@ function showAlbums(artistName, albums) {
     const img = document.createElement("img");
     img.src = album.cover_image;
     const title = document.createElement("p");
-    title.textContent = album.title;
+    title.innerHTML = `<strong>${album.title}</strong>`;
+    title.style.textAlign = "left";
     albumDiv.appendChild(img);
     albumDiv.appendChild(title);
 
     const tracklist = document.createElement("ul");
     tracklist.style.display = "none";
+    tracklist.style.textAlign = "left";
+    tracklist.style.margin = "0.5rem 0 1rem 0";
     albumDiv.appendChild(tracklist);
 
     albumDiv.addEventListener("click", async () => {
       if (tracklist.style.display === "none") {
-        const idToUse = album.master_id || album.id;
-        const res = await fetch(`https://api.discogs.com/masters/${idToUse}`);
+        const res = await fetch(`https://api.discogs.com/releases/${album.id}`);
         const data = await res.json();
 
         if (Array.isArray(data.tracklist) && data.tracklist.length > 0) {
           tracklist.innerHTML = "";
           data.tracklist.forEach(track => {
             const li = document.createElement("li");
-            li.textContent = track.title;
+            li.textContent = `${track.position} — ${track.title}${track.duration ? " (" + track.duration + ")" : ""}`;
             tracklist.appendChild(li);
           });
           tracklist.style.display = "block";
+          const y = tracklist.getBoundingClientRect().top + window.scrollY - window.innerHeight / 2;
+          window.scrollTo({ top: y, behavior: "smooth" });
         }
       } else {
         tracklist.style.display = "none";
@@ -151,10 +155,13 @@ function displayRandomAlbums() {
 
     const title = document.createElement("p");
     const artist = album.artists?.[0]?.name || "Unknown";
-    title.textContent = `${cleanArtistName(artist)} – ${album.title}`;
+    title.innerHTML = `<strong>${cleanArtistName(artist)} – ${album.title}</strong>`;
+    title.style.textAlign = "left";
 
     const tracklist = document.createElement("ul");
     tracklist.style.display = "none";
+    tracklist.style.textAlign = "left";
+    tracklist.style.margin = "0.5rem 0 1rem 0";
 
     albumDiv.appendChild(img);
     albumDiv.appendChild(title);
@@ -162,18 +169,19 @@ function displayRandomAlbums() {
 
     albumDiv.addEventListener("click", async () => {
       if (tracklist.style.display === "none") {
-        const idToUse = album.master_id || album.id;
-        const res = await fetch(`https://api.discogs.com/masters/${idToUse}`);
+        const res = await fetch(`https://api.discogs.com/releases/${album.id}`);
         const data = await res.json();
 
         if (Array.isArray(data.tracklist) && data.tracklist.length > 0) {
           tracklist.innerHTML = "";
           data.tracklist.forEach(track => {
             const li = document.createElement("li");
-            li.textContent = track.title;
+            li.textContent = `${track.position} — ${track.title}${track.duration ? " (" + track.duration + ")" : ""}`;
             tracklist.appendChild(li);
           });
           tracklist.style.display = "block";
+          const y = tracklist.getBoundingClientRect().top + window.scrollY - window.innerHeight / 2;
+          window.scrollTo({ top: y, behavior: "smooth" });
         }
       } else {
         tracklist.style.display = "none";
