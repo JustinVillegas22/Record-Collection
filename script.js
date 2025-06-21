@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!userInteracted) {
       artistList.scrollBy({ left: 48, behavior: "smooth" }); // 3rem = 48px
     }
-  }, 3000);
+  }, 750);
 
   function stopScrollOnInteraction() {
     userInteracted = true;
