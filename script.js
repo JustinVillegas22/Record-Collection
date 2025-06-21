@@ -195,6 +195,31 @@ function displayRandomAlbums() {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+
+  // Auto-scroll artist list slowly until user interacts
+  let userInteracted = false;
+  const artistList = document.getElementById("artist-list");
+
+  const scrollInterval = setInterval(() => {
+    if (!userInteracted) {
+      artistList.scrollBy({ left: 48, behavior: "smooth" }); // 3rem = 48px
+    }
+  }, 3000);
+
+  function stopScrollOnInteraction() {
+    userInteracted = true;
+    clearInterval(scrollInterval);
+    window.removeEventListener("scroll", stopScrollOnInteraction);
+    window.removeEventListener("click", stopScrollOnInteraction);
+    window.removeEventListener("keydown", stopScrollOnInteraction);
+    window.removeEventListener("touchstart", stopScrollOnInteraction);
+  }
+
+  window.addEventListener("scroll", stopScrollOnInteraction);
+  window.addEventListener("click", stopScrollOnInteraction);
+  window.addEventListener("keydown", stopScrollOnInteraction);
+  window.addEventListener("touchstart", stopScrollOnInteraction);
+
   const title = document.querySelector("h1");
   if (title) title.style.cursor = "pointer";
   title?.addEventListener("click", () => location.reload());
